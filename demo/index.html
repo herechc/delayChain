@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>Examples</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<link href="" rel="stylesheet">
+</head>
+<body>
+</body>
+<script type="text/javascript">
+var dcDelay=(function(){
+	var _delay=function(){
+		this.state=false;
+		this.__queue=[];
+		this.index=0;
+		return this;
+	}
+	/*
+	*执行队列
+	*/
+	_delay.prototype.s=function(){
+			var self=this;
+			if(self.state) return;			
+			self.state=true;
+			this.index--;
+			var startfn=function(){
+				if(self.__queue.length!=0){
+					var _obj=self.__queue.shift();
+					setTimeout(function(){
+						_obj.fn()
+						startfn()
+					},_obj.m)
+				}
+			}
+			startfn()
+	}
+
+	_delay.prototype.w=function(t){
+		this.__queue.push({
+			m:t,
+			fn:null
+		})
+		return this;
+	}
+	_delay.prototype.r=function(fn){
+		this.__queue[this.index].fn=fn;
+		this.index++;
+		this.s()
+		return this;
+	}
+	return {
+		w:function(t){
+			return (new _delay()).w(t)
+		},
+		r:function(fn){
+			return (new _delay()).r(fn)
+		}
+	}
+})()
+
+
+dcDelay.w(100).r(function(){
+	 console.log("1")
+}).w(700).r(function(){
+	 console.log("2")
+}).w(3000).r(function(){
+	 console.log("3")
+}).w(40).r(function(){
+	 console.log("4")
+}).w(1000).r(function(){
+	 console.log("5")
+}).w(800).r(function(){
+	 console.log("6")
+})
+
+
+
+
+
+
+
+
+</script>
+</html>
